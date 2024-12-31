@@ -1,15 +1,22 @@
 {
   description = "NixOS module for QuarkDB (https://eos-web.web.cern.ch/eos-web/)";
 
-  inputs.nixpkgs.url = "nixpkgs/nixos-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs = {
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    {
-      overlays.default =
-        final: prev: {
-          quarkdb = prev.callPackage ./nixpkgs/quarkdb {
-            inherit (final)
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
+
+      perSystem = { config, pkgs, ... }: {
+        packages = {
+          quarkdb = pkgs.callPackage ./nixpkgs/quarkdb {
+            inherit (pkgs)
               lib stdenv fetchgit
               bzip2
               cmake
@@ -29,18 +36,9 @@
               zstd
               ;
           };
-        }
-      ;
-    } // (
-      flake-utils.lib.eachDefaultSystem (system:
-        let
-          pkgs = import nixpkgs { inherit system; overlays = [ self.overlays.default ]; };
-        in
-        {
-          packages = {
-            inherit (pkgs)
-              quarkdb
-              ;
-          };
-        }));
+
+          default = config.packages.quarkdb;
+        };
+      };
+    };
 }
