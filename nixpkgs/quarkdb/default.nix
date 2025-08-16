@@ -21,12 +21,12 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "quarkdb";
-  version = "0.4.3.95.ccbf0a7";
+  version = "0.4.3.112.d07fd8e";
 
   src = lib.makeOverridable fetchgit {
     url = "https://gitlab.cern.ch/eos/quarkdb.git";
-    rev = "ccbf0a7496ed17129d0f58a5b12895b9208aa0cc";
-    hash = "sha256-otfaUUX0yqWkgJD/YCdOeAVl2GJ8swwUHicWHCCc7J8=";
+    rev = "d07fd8ed0b231083a3e443722740acb3df6b355b";
+    hash = "sha256-StI8YOMCGXnX0F3L4+dTVjrb5dP/gP5pR+5DWbHXKWM=";
     fetchSubmodules = true; # Some dependencies are in Git submodules.
     deepClone = true; # Needed by this package's `genversion.py` script.
   };
